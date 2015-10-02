@@ -1,0 +1,62 @@
+<Schema name="Setor Comercial">
+  <Cube name="Pedidos" description="Data Mart - Pedidos" cache="true" enabled="true">
+    <Table name="fato_pedidos">
+    </Table>
+    <Dimension type="StandardDimension" foreignKey="fk_vendedor" highCardinality="false" name="Vendedores">
+      <Hierarchy name="Vendedor" hasAll="true" allMemberName="Todos Vendedores" primaryKey="fk_vendedor">
+        <Table name="dim_vendedor">
+        </Table>
+        <Level name="Vendedor" table="dim_vendedor" column="vendedor" type="String" uniqueMembers="true" levelType="Regular" hideMemberIf="Never">
+        </Level>
+      </Hierarchy>
+    </Dimension>
+    <Dimension type="TimeDimension" foreignKey="fk_tempo" highCardinality="false" name="Periodo">
+      <Hierarchy name="Periodo" hasAll="true" allMemberName="Todos Periodos" primaryKey="fk_tempo">
+        <Table name="dim_tempo">
+        </Table>
+        <Level name="Ano" table="dim_tempo" column="ano" type="Integer" uniqueMembers="true" levelType="TimeYears" hideMemberIf="Never">
+        </Level>
+        <Level name="Trimestre" table="dim_tempo" column="trimestre" type="Integer" uniqueMembers="false" levelType="TimeHalfYear" hideMemberIf="Never">
+        </Level>
+        <Level name="Mes" table="dim_tempo" column="mes" nameColumn="descmes" ordinalColumn="mes" type="Integer" uniqueMembers="false" levelType="TimeMonths" hideMemberIf="Never">
+        </Level>
+      </Hierarchy>
+    </Dimension>
+    <Dimension type="StandardDimension" foreignKey="fk_cliente" highCardinality="false" name="Cliente">
+      <Hierarchy name="Cliente" hasAll="true" allMemberName="Todos Clientes" primaryKey="fk_cliente">
+        <Table name="dim_cliente">
+        </Table>
+        <Level name="EstadoCivil" table="dim_cliente" column="estado_civil" type="String" uniqueMembers="true" levelType="Regular" hideMemberIf="Never">
+        </Level>
+        <Level name="Cliente" table="dim_cliente" column="nome" type="String" uniqueMembers="true" levelType="Regular" hideMemberIf="Never">
+        </Level>
+      </Hierarchy>
+    </Dimension>
+    <Dimension type="StandardDimension" foreignKey="fk_produto" highCardinality="false" name="Produto">
+      <Hierarchy name="Produto" hasAll="true" allMemberName="Todos Produtos" primaryKey="fk_produto">
+        <Table name="dim_produto">
+        </Table>
+        <Level name="Linha" table="dim_produto" column="linha" type="String" uniqueMembers="true" levelType="Regular" hideMemberIf="Never">
+        </Level>
+        <Level name="Produto" table="dim_produto" column="descricao" type="String" uniqueMembers="true" levelType="Regular" hideMemberIf="Never">
+        </Level>
+      </Hierarchy>
+    </Dimension>
+    <Dimension type="StandardDimension" foreignKey="fk_regiao" highCardinality="false" name="Regiao">
+      <Hierarchy name="Regiao" hasAll="true" allMemberName="Todas Regi&#245;es" primaryKey="fk_regiao">
+        <Table name="dim_regiao">
+        </Table>
+        <Level name="Regiao" table="dim_regiao" column="regiao" type="String" uniqueMembers="true" levelType="Regular" hideMemberIf="Never">
+        </Level>
+        <Level name="Estado" table="dim_regiao" column="estado" type="String" uniqueMembers="false" levelType="Regular" hideMemberIf="Never">
+        </Level>
+      </Hierarchy>
+    </Dimension>
+    <Measure name="Valor" column="vlr_venda" datatype="Numeric" formatString=" #,###" aggregator="sum" visible="false">
+    </Measure>
+    <Measure name="Quantidade" column="qtd_venda" datatype="Numeric" formatString="#,###" aggregator="sum" visible="true">
+    </Measure>
+    <CalculatedMember name="Total" formula="[Measures].[Valor]*[Measures].[Quantidade] " dimension="Measures" visible="true">
+    </CalculatedMember>
+  </Cube>
+</Schema>
